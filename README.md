@@ -1,14 +1,29 @@
 # Summary
 
-The goal of this project is to recreate a command shell in C++. This command shell is known as rshell. It can take commands and chain them using && (and) and || (or). 
+The goal of this project is to recreate a command shell in C++. This command shell is known as rshell. It can take commands and chain them using the connectors: '&&' (and), '||' (or), ';' (semicolon). 
 
-We parsed the user input using the Boost tokenizer and converted the tokens into a postfix notation. Our connectors (;, ||, &&) served as the operators for our tree. The commands and their arguments make up the operands.
+We parsed the user input using the Boost tokenizer and converted the tokens into a postfix notation in order for our binary tree implementation to work. Our connectors (;, ||, &&) served as the operators for our tree (internal nodes). The commands and their arguments make up the operands (leaves).
 
-We implemented a postfix binary tree to handle commands and connectors.  
+Once we had our tokens in postfix notation we iterated through the vector of tokens and converted each token into either an Executable (Command/Exit) object or a Connector (And/Or/Semicolon) object, and used the postfix binary tree algorithm in order to build our tree.      
 
 ## How to Use
 
+Input bash commands on a single line. Seperate commands using connectors:
+
+|| == OR, if the left command fails the right command executes
+&& == AND, if left command succeeds, then right command executes
+; == Next command executes
+
+exit == exits the command line
+
 ## Known Bugs
+
+When a command fails, exit needs to be input multiple times (usually twice)
+
+Exit rarely closes entire bash, but could not replicate so it was possibly user error
+
+exit(0) command causes 5 possible blocks of memory leakage
+
 
 ## Authors
 

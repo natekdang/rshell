@@ -1,5 +1,5 @@
 CC = g++
-CC_FLAGS = -std=c++11 -Wall -Werror -ansi -pedantic 
+CC_FLAGS = -Wall -Werror -ansi -pedantic -std=c++11 
 EXEC = PrototypeExecute.cpp
 SOURCES = $(wildcard *.cpp)
 OBJECTS = $(SOURCES:.cpp=.o)
