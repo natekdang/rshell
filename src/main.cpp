@@ -226,7 +226,7 @@ int main()
         
         catch (char emptyError) 
         {
-            std::cout << "No Command Inputted" << std::endl; //OUTPUT FOR TESTING ONLY, WHEN USER DOESN'T INPUT ANYTHING AND PRESSES ENTER JUST PROMPT FOR INPUT AGAIN
+            //std::cout << "No Command Inputted" << std::endl; //OUTPUT FOR TESTING ONLY, WHEN USER DOESN'T INPUT ANYTHING AND PRESSES ENTER JUST PROMPT FOR INPUT AGAIN
         }
         
         //CATCH BLOCK FOR EXITTING LOOP AND DEALLOCATING MEMORY
