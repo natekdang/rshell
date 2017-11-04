@@ -18,7 +18,7 @@ exit == exits the command line
 
 ## Known Bugs
 
-When a command fails, exit needs to be input multiple times (usually twice)
+As of right now, ending a command with a connector errors
 
 Exit rarely closes entire bash, but could not replicate so it was possibly user error
 
