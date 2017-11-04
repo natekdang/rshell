@@ -18,7 +18,7 @@ class Tree //TEST!!!!!!!!!!!!!
 
 void Tree::destructor(Base *curr) //will deallocate memory in tree (Base objects)
 {
-    if(dynamic_cast<Executable *>(curr) == NULL)
+    if (dynamic_cast<Executable *>(curr) == NULL)
     {
         destructor(dynamic_cast<Connector *>(curr)->lhs);
         destructor(dynamic_cast<Connector *>(curr)->rhs);
