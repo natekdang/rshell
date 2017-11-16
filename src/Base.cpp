@@ -5,6 +5,7 @@
 #include <string>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
@@ -79,7 +80,141 @@ bool Command::execute() //execute(string cmdStr, string argStr)
     }
     return true;
 }
-
+//search for [, note the index of each. Do the same for ]. Possibly store result as pairs in a vector
+                //go to index of [, check if next char is "-"
+                //if it is, check next char for flag
+                        //take string after flag up until ]
+                        //call exec
+                    //else, assume it is e
+                        //take string after flag up until ]
+                        //call exec
+bool Test::execute()  //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+{
+    std::string flag;
+    std::string filePath;
+    bool returnBool = false; 
+    
+    std::cout << "TESTING, OUTPUTTING FLAGANDSTRING " << flagAndPath << std::endl; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    
+    if(flagAndPath.at(0) == '-') //CHECK FOR FLAGS, then check for what type of flag
+    {
+        //is flag
+        if(flagAndPath.at(1) == 'e')
+        {
+            flag = "e";
+        }
+        else if(flagAndPath.at(1) == 'f')
+        {
+            flag = "f";
+        }
+        else if(flagAndPath.at(1) == 'd')
+        {
+            flag = "d";
+        }
+        else //user input wrong flag
+        {
+            std::cout << "FLAG NOT RECOGNIZED" <<std::endl;
+            return false;
+        }
+        //flag = flagAndPath.
+        //const char *test_command = strs.at(1).c_str();
+        if (flagAndPath.at(flagAndPath.length() - 1) == ']') //if instantiated using brackets!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        {
+            //filePath = flagAndPath.substr(0, (flagAndPath.length() - 2));
+            filePath = flagAndPath.substr(3, (flagAndPath.length() - 5)); //needs to be 5, second parameter tells how long the substring will be, not ending index
+            std::cout << "TEST: " << filePath << std::endl;
+            std::cout << "Flag, found second bracket" << std::endl;
+        }
+        else 
+        {
+            filePath = flagAndPath.substr(3, (flagAndPath.length() - 1));
+        }
+    }
+    else //no flag
+    {
+        if (flagAndPath.at(flagAndPath.length() - 1) == ']') ////if instantiated using brackets!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        {
+            filePath = flagAndPath.substr(0, (flagAndPath.length() - 2));
+            std::cout << "No flag, found second bracket" << std::endl;
+        }
+        else 
+        {
+            filePath = flagAndPath; //also convulted
+        }
+        std::cout << "TEST: No flag" << std::endl; //JTEST!!!!!
+        
+    }
+    
+    std::cout << "Filepath: " << filePath << "!!" << std::endl;
+    
+    
+    struct stat buf;
+    int testResult = (stat(filePath.c_str(), &buf)); //If true, it returns 0
+    
+    std::cout << "TEST IF FILE EXISTS: " << testResult << std::endl;
+    
+    if (flag == "e" || flag.empty())
+    {
+        std::cout << "-e OR no flag" << std::endl;
+        if (testResult == 0)
+        {
+            std::cout << "(TRUE)" << std::endl;
+            returnBool = true;
+        }
+        else
+        {
+            std::cout << "(FALSE)" << std::endl;
+            returnBool = false;
+        }
+    }
+    else if (flag == "f")
+    {
+        //Do IS_REG
+         std::cout << "f flag" << S_ISREG(buf.st_mode) << std::endl;
+        if (testResult == 0)
+        {
+            if (S_ISREG(buf.st_mode))
+            {
+                std::cout << "(TRUE)" << std::endl;
+                returnBool = true;
+            }
+            else
+            {
+                std::cout << "(FALSE)" << std::endl;
+                returnBool = false;
+            }
+        }
+        else
+        {
+            std::cout << "(FALSE)" << std::endl;
+            returnBool = false;
+        }
+    }
+    else if (flag == "d")
+    {
+        if (testResult == 0)
+        {
+            std::cout << "d flag" << S_ISDIR(buf.st_mode) << std::endl;
+            if (S_ISDIR(buf.st_mode))
+            {
+                std::cout << "(TRUE)" << std::endl;
+                returnBool = true;
+            }
+            else
+            {
+                std::cout << "(FALSE)" << std::endl;
+                returnBool = false;
+            }
+        }
+        else
+        {
+            std::cout << "(FALSE)" << std::endl;
+            returnBool = false;
+        }
+    }
+    
+    return returnBool;
+}
 bool Exit::execute() //may need to fix !!!!!!!!!!!!!!!!!!!!!!!!!!!
 {
     throw false;

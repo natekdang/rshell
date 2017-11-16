@@ -83,8 +83,6 @@ int main()
         
         bool notCommand = true;  
         
-        //std::vector<std::string> tokens; //vector that will HOLD our tokens 
-        
         try
         {
             for (tokenizer::iterator it = tok.begin(); it != tok.end(); it++) //ITERATE THROUGH EVERY TOKEN
@@ -101,6 +99,19 @@ int main()
                         commandLine += " " + *it; //append space and
                     }
                 }
+                //ADDING BRANCH FOR TEST     DONT THINK WE NEED THIS, JUST NEED TO CHECK FOR TEST WHEN BUILDING THE ACTUAL TREE
+                /*else if (*it == "test")
+                {
+                    if (notCommand)
+                    {
+                        notCommand = false;
+                        commandLine = *it;
+                    }
+                    else 
+                    {
+                        commandLine += " " + *it; //append space 
+                    }
+                }*/
                 else
                 {
                     if (notCommand) 
@@ -160,6 +171,7 @@ int main()
                 
                 else //ELSE IT IS A COMMAND AND ITS ARGUMENTS, NEED TO BREAK UP THE COMMAND AND ITS ARGUMENTS INTO TWO SEPARATE STRINGS IN ORDER TO CREATE OBJECT
                 {
+                    //if is "test" need to break up the next string check for '-' for flag, if no '-' the next string should be filepath string 
                     if (tokens.at(i).find(" ") != std::string::npos)
                     {
                         std::string commandString = tokens.at(i).substr(0, tokens.at(i).find(" ") );
@@ -168,6 +180,10 @@ int main()
                         if (commandString == "exit")
                         {
                             pointer = new Exit;
+                        }
+                        else if (commandString == "test" || commandString == "[")  //CREATE TEST OBJECT WITH PARAMETERS
+                        {
+                            pointer = new Test(parameters);
                         }
                         else
                         {
@@ -226,7 +242,7 @@ int main()
         
         catch (char emptyError) 
         {
-            std::cout << "No Command Inputted" << std::endl; //OUTPUT FOR TESTING ONLY, WHEN USER DOESN'T INPUT ANYTHING AND PRESSES ENTER JUST PROMPT FOR INPUT AGAIN
+            //std::cout << "No Command Inputted" << std::endl; //OUTPUT FOR TESTING ONLY, WHEN USER DOESN'T INPUT ANYTHING AND PRESSES ENTER JUST PROMPT FOR INPUT AGAIN
         }
         
         //CATCH BLOCK FOR EXITTING LOOP AND DEALLOCATING MEMORY
