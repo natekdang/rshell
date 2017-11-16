@@ -181,7 +181,11 @@ int main()
                         {
                             pointer = new Exit;
                         }
+<<<<<<< HEAD
                         else if (commandString == "test" || commandString == "[")  //CREATE TEST OBJECT WITH PARAMETERS
+=======
+                        else if (commandString == "test")  //CREATE TEST OBJECT WITH PARAMETERS
+>>>>>>> a9fcb07469ffcb41d6342d277cbd8407dcdc0dc7
                         {
                             pointer = new Test(parameters);
                         }

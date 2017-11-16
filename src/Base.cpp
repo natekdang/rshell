@@ -94,7 +94,11 @@ bool Test::execute()  //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     std::string filePath;
     bool returnBool = false; 
     
+<<<<<<< HEAD
     std::cout << "TESTING, OUTPUTTING FLAGANDSTRING " << flagAndPath << std::endl; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+=======
+    //std::cout << "TESTING, OUTPUTTING FLAGANDSTRING" << flagAndPath << std::endl; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+>>>>>>> a9fcb07469ffcb41d6342d277cbd8407dcdc0dc7
     
     if(flagAndPath.at(0) == '-') //CHECK FOR FLAGS, then check for what type of flag
     {
@@ -118,6 +122,7 @@ bool Test::execute()  //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
         //flag = flagAndPath.
         //const char *test_command = strs.at(1).c_str();
+<<<<<<< HEAD
         if (flagAndPath.at(flagAndPath.length() - 1) == ']') //if instantiated using brackets!!!!!!!!!!!!!!!!!!!!!!!!!!!
         {
             //filePath = flagAndPath.substr(0, (flagAndPath.length() - 2));
@@ -146,16 +151,34 @@ bool Test::execute()  //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
     
     std::cout << "Filepath: " << filePath << "!!" << std::endl;
+=======
+        filePath = flagAndPath.substr(3, (flagAndPath.length() - 1) );
+    }
+    else //no flag
+    {
+        //::cout << "TEST: No flag" << std::endl; //JTEST!!!!!
+        filePath = flagAndPath; //also convulted
+    }
+    //std::cout << "Filepath: " << filePath << std::endl;
+>>>>>>> a9fcb07469ffcb41d6342d277cbd8407dcdc0dc7
     
     
     struct stat buf;
     int testResult = (stat(filePath.c_str(), &buf)); //If true, it returns 0
     
+<<<<<<< HEAD
     std::cout << "TEST IF FILE EXISTS: " << testResult << std::endl;
     
     if (flag == "e" || flag.empty())
     {
         std::cout << "-e OR no flag" << std::endl;
+=======
+   // std::cout << "TEST IF FILE EXISTS: " << testResult << std::endl;
+    
+    if (flag == "e" || flag.empty())
+    {
+       // std::cout << "-e OR no flag" << std::endl;
+>>>>>>> a9fcb07469ffcb41d6342d277cbd8407dcdc0dc7
         if (testResult == 0)
         {
             std::cout << "(TRUE)" << std::endl;
@@ -170,7 +193,11 @@ bool Test::execute()  //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     else if (flag == "f")
     {
         //Do IS_REG
+<<<<<<< HEAD
          std::cout << "f flag" << S_ISREG(buf.st_mode) << std::endl;
+=======
+         //std::cout << "f flag" << S_ISREG(buf.st_mode) << std::endl;
+>>>>>>> a9fcb07469ffcb41d6342d277cbd8407dcdc0dc7
         if (testResult == 0)
         {
             if (S_ISREG(buf.st_mode))
@@ -194,7 +221,11 @@ bool Test::execute()  //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     {
         if (testResult == 0)
         {
+<<<<<<< HEAD
             std::cout << "d flag" << S_ISDIR(buf.st_mode) << std::endl;
+=======
+            //std::cout << "d flag" << S_ISDIR(buf.st_mode) << std::endl;
+>>>>>>> a9fcb07469ffcb41d6342d277cbd8407dcdc0dc7
             if (S_ISDIR(buf.st_mode))
             {
                 std::cout << "(TRUE)" << std::endl;
