@@ -32,6 +32,16 @@ class Command : public Executable
         bool execute();
 };
 
+class Test : public Executable
+{
+    protected:
+        std::string flagAndPath;
+    public: 
+        Test() : flagAndPath("") {};
+        Test(std::string userFlagAndPath) : flagAndPath(userFlagAndPath) {};
+        bool execute();
+};
+
 class Exit : public Executable 
 {
     public:
