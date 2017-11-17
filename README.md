@@ -8,14 +8,14 @@ Once we had our tokens in postfix notation we iterated through the vector of tok
 
 Once our tree was built we called execute() on the root of the tree, which will iterate through the entire tree calling execute() on all the nodes in the desired order.  
 
-rshell can also use the test command to test file paths
+rshell can also use the test command to test file paths with the flags -e, -f, or -d, with -e being the default flag when no flag is specified.  Test can also be called using brackets.   
 
 It can also handle precedence with parenthesis
 
 
 ## How to Use
 
-Input bash commands on a single line. Seperate commands using connectors:
+Input bash commands on a single line. Separate commands using connectors:
 
 || == OR, if the left command fails the right command executes
 && == AND, if left command succeeds, then right command executes
