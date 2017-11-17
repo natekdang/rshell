@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <stack>
 
 class Tree //TEST!!!!!!!!!!!!!
 {
@@ -66,7 +67,7 @@ void createTree(std::vector<Base *>& objects, std::vector<Base *>& postFix) //cr
 int main()
 {
     typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-    boost::char_separator<char> sep{" ", ";"};
+    boost::char_separator<char> sep{" ", ";()"};
     
     while(1)
     {
@@ -81,10 +82,45 @@ int main()
         
         tokenizer tok{userCommand, sep}; //Parse, breaking up by spaces and semicolons 
         
+        std::stack<std::string> parenStack; //stack to compute amount of parantheses
+    try
+    {
+        for (tokenizer::iterator it = tok.begin(); it != tok.end(); it++)
+        {
+            //std::cout << *it << "Checking parentheses" << std::endl;
+            if (*it == "(")
+            {
+                //std::cout << "Pushing to paren stack" << std::endl;
+                parenStack.push(*it);
+            }
+            else if (*it == ")")
+            {
+                //std::cout << "Closing paren" << std::endl;
+                if (parenStack.empty())
+                {
+                    //imbalanced!
+                    
+                    throw 'e';
+                }
+                else
+                {
+                    //std::cout << "Popping" << std::endl;
+                    parenStack.pop();
+                }
+            }
+        }
+        if (parenStack.size() != 0)
+        {
+            //std::cout << "Imbalanced Parentheses" << std::endl;
+            throw 'e';
+        }
+       
+        
+        
         bool notCommand = true;  
         
-        try
-        {
+//        try
+//        {
             for (tokenizer::iterator it = tok.begin(); it != tok.end(); it++) //ITERATE THROUGH EVERY TOKEN
             {
                 if (*it != ";" && *it != "||" && *it != "&&") //if not a connector 
@@ -181,11 +217,7 @@ int main()
                         {
                             pointer = new Exit;
                         }
-<<<<<<< HEAD
                         else if (commandString == "test" || commandString == "[")  //CREATE TEST OBJECT WITH PARAMETERS
-=======
-                        else if (commandString == "test")  //CREATE TEST OBJECT WITH PARAMETERS
->>>>>>> a9fcb07469ffcb41d6342d277cbd8407dcdc0dc7
                         {
                             pointer = new Test(parameters);
                         }
@@ -246,6 +278,10 @@ int main()
         
         catch (char emptyError) 
         {
+            if(emptyError == 'e')
+            {
+                std::cout << "Imbalanced Parantheses" << std::endl; 
+            }
             //std::cout << "No Command Inputted" << std::endl; //OUTPUT FOR TESTING ONLY, WHEN USER DOESN'T INPUT ANYTHING AND PRESSES ENTER JUST PROMPT FOR INPUT AGAIN
         }
         
