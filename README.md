@@ -8,6 +8,9 @@ Once we had our tokens in postfix notation we iterated through the vector of tok
 
 Once our tree was built we called execute() on the root of the tree, which will iterate through the entire tree calling execute() on all the nodes in the desired order.  
 
+rshell can also use the test command to test file paths
+
+It can also handle precedence with parenthesis
 
 
 ## How to Use
@@ -19,6 +22,15 @@ Input bash commands on a single line. Seperate commands using connectors:
 ; == Next command executes
 
 exit == exits the command line
+
+To test file path, do the following:
+test < flag > < filepath > or [ flag filepath ] 
+
+Flags:
+
+-e == checks if file exists
+-f == checks if file exists and if it is a regular file
+-d == checks if file exists and is a directory
 
 ## Known Bugs
 
