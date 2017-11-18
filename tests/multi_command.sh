@@ -19,4 +19,16 @@ touch a.txt b.txt c.txt d.txt
 
 rm a.txt b.txt c.txt d.txt
 
+echo a && (echo b && (echo c && (ech || echo out))) && echo a && (echo b && (echo c && (ech || echo out)) )
+
+echa && (echo b && (echo c && (ech || echo out))) || echo a && (echo b && (echo c && (ech || echo out))) 
+
+echo a && (echo b && (echo c && (ech || echo out))) && echo a && (echo b && (echo c && (ech || echo out))) && echo a && (echo b && (echo c && (ech || echo out))) 
+
+echo a && ls || echo; 
+
+echo be; && echo x
+
+echo a && ls && ls
+
 EOF

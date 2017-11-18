@@ -48,4 +48,6 @@ test
 
 [ ]
 
+[ src/a.out ]
+
 EOF

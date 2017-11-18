@@ -6,7 +6,7 @@
 #include <vector>
 #include <stack>
 
-class Tree //TEST!!!!!!!!!!!!!
+class Tree
 {
     public:
         Base *root;
@@ -39,14 +39,14 @@ void checkForComment(std::string& userCommand) //comment checker
     }
 }
 
-void createTree(std::vector<Base *>& objects, std::vector<Base *>& postFix) //create tree
+void createTree(std::stack<Base *>& objects, std::vector<Base *>& postFix) //create tree
 {
     Base *pointer;
     while (!postFix.empty())
     {
         if (dynamic_cast<Connector *>(postFix.at(0) ) == NULL) //IF COMMAND SIMPLY PUSH ONTO QUEUE 
         {
-            objects.push_back(postFix.at(0));
+            objects.push(postFix.at(0));
             postFix.erase(postFix.begin());
         }
         else //IF CONNECTOR POP TWICE, SET FIRST POPPED VALUE TO CONNECTOR->LHS AND SECOND POPPED VALUE TO CONNECTOR->RHS
@@ -54,12 +54,12 @@ void createTree(std::vector<Base *>& objects, std::vector<Base *>& postFix) //cr
             pointer = postFix.at(0);
             postFix.erase(postFix.begin()); 
             
-            dynamic_cast<Connector *>(pointer)->lhs = objects.at(0); //pop top set connector left to pointer
-            objects.erase(objects.begin());
+            dynamic_cast<Connector *>(pointer)->rhs = objects.top(); //pop top set connector left to pointer
+            objects.pop();
             
-            dynamic_cast<Connector *>(pointer)->rhs = objects.at(0); //pop top again set connect right to pointer
-            objects.erase(objects.begin());
-            objects.push_back(pointer);
+            dynamic_cast<Connector *>(pointer)->lhs = objects.top(); //pop top again set connect right to pointer
+            objects.pop();
+            objects.push(pointer);
         }
     }
 }
@@ -85,7 +85,8 @@ int main()
         std::stack<std::string> parenStack; //stack to compute amount of parantheses
     try
     {
-        for (tokenizer::iterator it = tok.begin(); it != tok.end(); it++)
+        //Iterates through the token to find parentheses and checks if there is an imbalance
+        for (tokenizer::iterator it = tok.begin(); it != tok.end(); it++) 
         {
             //std::cout << *it << "Checking parentheses" << std::endl;
             if (*it == "(")
@@ -98,8 +99,7 @@ int main()
                 //std::cout << "Closing paren" << std::endl;
                 if (parenStack.empty())
                 {
-                    //imbalanced!
-                    
+                    //imbalanced, throw error
                     throw 'e';
                 }
                 else
@@ -115,15 +115,20 @@ int main()
             throw 'e';
         }
        
-        
-        
         bool notCommand = true;  
         
-//        try
-//        {
             for (tokenizer::iterator it = tok.begin(); it != tok.end(); it++) //ITERATE THROUGH EVERY TOKEN
             {
-                if (*it != ";" && *it != "||" && *it != "&&") //if not a connector 
+                if (*it == "(" || *it == ")")
+                {
+                    if (!commandLine.empty())
+                    {
+                        tokens.push_back(commandLine);
+                        commandLine.clear();
+                    }
+                    tokens.push_back(*it);
+                }
+                else if (*it != ";" && *it != "||" && *it != "&&") //if not a connector 
                 {
                     if (notCommand) //if is command set to false so that we know
                     {
@@ -135,19 +140,6 @@ int main()
                         commandLine += " " + *it; //append space and
                     }
                 }
-                //ADDING BRANCH FOR TEST     DONT THINK WE NEED THIS, JUST NEED TO CHECK FOR TEST WHEN BUILDING THE ACTUAL TREE
-                /*else if (*it == "test")
-                {
-                    if (notCommand)
-                    {
-                        notCommand = false;
-                        commandLine = *it;
-                    }
-                    else 
-                    {
-                        commandLine += " " + *it; //append space 
-                    }
-                }*/
                 else
                 {
                     if (notCommand) 
@@ -155,16 +147,27 @@ int main()
                         throw 1; //invalid connector 
                     }
                     notCommand = true;
-                    tokens.push_back(commandLine);
+                    if (!commandLine.empty())
+                    {
+                        tokens.push_back(commandLine);
+                    }
                     commandLine.clear();
                     tokens.push_back(*it);
                 }
             } //FOR LOOP
             
-            if (!commandLine.empty()) //IF THERE WAS AN INPUT, PUSH CONSTRUCTED COMMANDLINE ONTO TOKEN VECTOR
+            //PUSHES IN LAST ARG IF NO CONNECTOR AFTER
+            if (!commandLine.empty())
             {
                 tokens.push_back(commandLine);
             }
+            
+            // //TESTING LOOP 
+            // for(unsigned i = 0; i < tokens.size(); i++)
+            // {
+            //     std::cout << tokens.at(i) << std::endl;
+            // }
+            
             else if (!tokens.empty())
             {
                 if (tokens.at(tokens.size() - 1) == ";" || tokens.at(tokens.size() - 1) == "||" || tokens.at(tokens.size() - 1) == "&&")
@@ -177,37 +180,85 @@ int main()
                 throw 'e'; //empty command line
             }
             
-            std::vector<std::string> stack;
+            //Tester to check tokens
+            // for(unsigned int i = 0; i < tokens.size(); i++)
+            // {
+            //     std::cout << tokens.at(i) << std::endl;
+            // }
+            //std::vector<std::string> stack;
+            
+            std::stack<std::string> stack;
             std::vector<Base *> postFix;
             Base *pointer;
             
+            
             for (unsigned int i = 0; i < tokens.size(); i++)
             {
-                if (tokens.at(i) == ";" || tokens.at(i) == "||" || tokens.at(i) == "&&") //IF TOKEN IS A CONNECTOR!!!!!!!!
+                //std::cout << "Is token connector" << std::endl;
+                //IF TOKEN IS CONNECTOR
+                if (tokens.at(i) == ";" || tokens.at(i) == "||" || tokens.at(i) == "&&" )
                 {
                     if (!stack.empty())
                     {
-                        if (stack.at(0) == "||")
+                        if (stack.top() == "||")
                         {
                             pointer = new Or;
+                            postFix.push_back(pointer);
+                            stack.pop();
                         }
-                        else if (stack.at(0) == "&&")
+                        else if (stack.top() == "&&")
                         {
                             pointer = new And;
+                            postFix.push_back(pointer);
+                            stack.pop();
                         }
-                        else
+                        else if (stack.top() == ";")
+                        {
+                            pointer = new Semicolon;\
+                            postFix.push_back(pointer);
+                            stack.pop();
+                        }
+                        
+                    }
+                    stack.push(tokens.at(i) );
+                }
+                //ELSE IF OPEN CONNECTOR
+                else if (tokens.at(i) == "(" ) 
+                {
+                    stack.push(tokens.at(i) );
+                }
+                //ELSE IF CLOSED CONNECTOR
+                else if (tokens.at(i) == ")" )
+                {
+                    //Goes through the stack of operators and converts and pops
+                    // until open paren
+                    while(stack.top() != "(" )
+                    {
+                        if (stack.top() == "||")
+                        {
+                            pointer = new Or;
+                            postFix.push_back(pointer);
+                        }
+                        else if (stack.top() == "&&")
+                        {
+                            pointer = new And;
+                            postFix.push_back(pointer);
+                        }
+                        else if(stack.top() == ";")
                         {
                             pointer = new Semicolon;
+                            postFix.push_back(pointer);
                         }
-                        postFix.push_back(pointer);
-                        stack.erase(stack.begin() );
+                        stack.pop();
                     }
-                    stack.push_back(tokens.at(i) );
+                    stack.pop(); //pops open paren on stack
                 }
-                
-                else //ELSE IT IS A COMMAND AND ITS ARGUMENTS, NEED TO BREAK UP THE COMMAND AND ITS ARGUMENTS INTO TWO SEPARATE STRINGS IN ORDER TO CREATE OBJECT
+                 //ELSE IT IS A COMMAND AND ITS ARGUMENTS, 
+                else 
+                //NEED TO BREAK UP THE COMMAND AND ITS ARGUMENTS INTO TWO SEPARATE STRINGS IN ORDER TO CREATE OBJECT
                 {
-                    //if is "test" need to break up the next string check for '-' for flag, if no '-' the next string should be filepath string 
+                    //if is "test" need to break up the next string check for 
+                    // '-' for flag, if no '-' the next string should be filepath string 
                     if (tokens.at(i).find(" ") != std::string::npos)
                     {
                         std::string commandString = tokens.at(i).substr(0, tokens.at(i).find(" ") );
@@ -225,6 +276,7 @@ int main()
                         {
                             pointer = new Command(commandString, parameters);
                         }
+                        postFix.push_back(pointer);
                     }
                     else
                     {
@@ -236,18 +288,17 @@ int main()
                         {
                             pointer = new Command(tokens.at(i), "");
                         }
+                        postFix.push_back(pointer);
                     }
-                    postFix.push_back(pointer);
                 }
             }
-            
             if (!stack.empty()) 
             {
-                if (stack.at(0) == "||")
+                if (stack.top() == "||")
                 {
                     pointer = new Or;
                 }
-                else if (stack.at(0) == "&&")
+                else if (stack.top() == "&&")
                 {
                     pointer = new And;
                 }
@@ -258,17 +309,15 @@ int main()
                 postFix.push_back(pointer);
             }
             
-            std::vector<Base *> objects;
-            
+            std::stack<Base *> objects;
             // CREATE AND EXECUTE TREE, CURRENTLY DEALLOCATES MEMORY RIGHT AFTER EXECUTING THE TREE
             createTree(objects, postFix); 
             
-            treePointer->root = objects.at(0);
+            treePointer->root = objects.top();
             treePointer->root->execute(); //execute from root
             treePointer->destructor(treePointer->root); //deallocate memory
             delete treePointer; //delete container
-            // ***************************************************************************
-        } //TRY BLOCK
+        } // END TRY BLOCK
         
         //CATCH BLOCK FOR INVALID CONNECTOR INPUT
         catch (int formatError)
@@ -276,13 +325,13 @@ int main()
             std::cout << "Invalid Input for Connectors: connectors cannot lead, end, or be consecutive" << std::endl; //TESTING ONLY, WILL SIMPLY PROMPT FOR INPUT AGAIN IF THIS HAPPENS
         }
         
+        //CATCH BLOCK FOR INVALID PARENTHESES
         catch (char emptyError) 
         {
             if(emptyError == 'e')
             {
                 std::cout << "Imbalanced Parantheses" << std::endl; 
             }
-            //std::cout << "No Command Inputted" << std::endl; //OUTPUT FOR TESTING ONLY, WHEN USER DOESN'T INPUT ANYTHING AND PRESSES ENTER JUST PROMPT FOR INPUT AGAIN
         }
         
         //CATCH BLOCK FOR EXITTING LOOP AND DEALLOCATING MEMORY

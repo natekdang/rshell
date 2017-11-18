@@ -80,17 +80,17 @@ bool Command::execute() //execute(string cmdStr, string argStr)
     }
     return true;
 }
-bool Test::execute()  //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+bool Test::execute() //Handles test command and brackets
 {
     std::string flag;
     std::string filePath;
     bool returnBool = false; 
     
-    //std::cout << "TESTING, OUTPUTTING FLAGANDSTRING" << flagAndPath << std::endl; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //std::cout << "TESTING, OUTPUTTING FLAGANDSTRING " << flagAndPath << std::endl;
     
     if(flagAndPath.at(0) == '-') //CHECK FOR FLAGS, then check for what type of flag
     {
-        //is flag
+        //is flag, determine what flag
         if(flagAndPath.at(1) == 'e')
         {
             flag = "e";
@@ -108,26 +108,43 @@ bool Test::execute()  //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             std::cout << "FLAG NOT RECOGNIZED" <<std::endl;
             return false;
         }
-        //flag = flagAndPath.
-        //const char *test_command = strs.at(1).c_str();
-        filePath = flagAndPath.substr(3, (flagAndPath.length() - 1) );
+ 
+        if (flagAndPath.at(flagAndPath.length() - 1) == ']')
+        {
+            //needs to be 5, second parameter tells how long the substring will be, not ending index
+            filePath = flagAndPath.substr(3, (flagAndPath.length() - 5));
+        }
+        else 
+        {
+            filePath = flagAndPath.substr(3, (flagAndPath.length() - 1));
+        }
     }
     else //no flag
     {
-        //::cout << "TEST: No flag" << std::endl; //JTEST!!!!!
-        filePath = flagAndPath;
+        if (flagAndPath.at(flagAndPath.length() - 1) == ']')
+        {
+            //takes string as arg
+            filePath = flagAndPath.substr(0, (flagAndPath.length() - 2));
+            //std::cout << "No flag, found second bracket" << std::endl;
+        }
+        else 
+        {
+            filePath = flagAndPath; //also convulted
+        }
+        //std::cout << "TEST: No flag" << std::endl; //TEST!!!!!
     }
-    //std::cout << "Filepath: " << filePath << std::endl;
     
-    
+    //std::cout << "Filepath: " << filePath << "!!" << std::endl;
+
+    //Check if file exists
     struct stat buf;
     int testResult = (stat(filePath.c_str(), &buf)); //If true, it returns 0
     
-   // std::cout << "TEST IF FILE EXISTS: " << testResult << std::endl;
+    //std::cout << "TEST IF FILE EXISTS: " << testResult << std::endl;
     
-    if (flag == "e" || flag.empty())
+    if (flag == "e" || flag.empty()) //e flag handler. Also runs if no flag
     {
-       // std::cout << "-e OR no flag" << std::endl;
+        //std::cout << "-e OR no flag" << std::endl;
         if (testResult == 0)
         {
             std::cout << "(TRUE)" << std::endl;
@@ -139,10 +156,10 @@ bool Test::execute()  //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             returnBool = false;
         }
     }
-    else if (flag == "f")
+    else if (flag == "f") //f flag handler
     {
         //Do IS_REG
-        //std::cout << "f flag" << S_ISREG(buf.st_mode) << std::endl;
+         //std::cout << "f flag" << S_ISREG(buf.st_mode) << std::endl;
         if (testResult == 0)
         {
             if (S_ISREG(buf.st_mode))
@@ -184,14 +201,12 @@ bool Test::execute()  //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             returnBool = false;
         }
     }
-    
     return returnBool;
 }
-bool Exit::execute() //may need to fix !!!!!!!!!!!!!!!!!!!!!!!!!!!
+bool Exit::execute() 
 {
     throw false;
 }
-
 bool And::execute()
 {
     if (lhs->execute()) //left returns true
@@ -210,7 +225,6 @@ bool And::execute()
         return false; 
     }
 }
-
 bool Or::execute() 
 {
     if (lhs->execute()) //left successful, don't execute right
@@ -229,7 +243,6 @@ bool Or::execute()
         }
     }
 }
-
 bool Semicolon::execute()
 {
     lhs->execute(); //execute left child first

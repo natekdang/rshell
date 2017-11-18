@@ -12,7 +12,7 @@ class Base //ABSTRACT BASE CLASS
         virtual bool execute() = 0;
 };
 
-//////////////////////////////////////////////////////////////////EXECUTABLE AND DERIVED CLASSES
+/////////////////////////////////////////////////EXECUTABLE AND DERIVED CLASSES
 
 class Executable : public Base 
 {
@@ -49,7 +49,7 @@ class Exit : public Executable
         bool execute();
 };
 
-/////////////////////////////////////////////////////////////////////CONNECTOR AND DERIVED CLASSES
+//////////////////////////////////////////////////CONNECTOR AND DERIVED CLASSES
 
 class Connector : public Base 
 {
