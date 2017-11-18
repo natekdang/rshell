@@ -48,4 +48,8 @@ echo a && (exit && echo cant see me!)
 
 (echo a || echo d) || echo f)
 
+()
+
+()()()()
+
 EOF

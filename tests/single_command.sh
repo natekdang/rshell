@@ -26,7 +26,7 @@ ls -a
 
 ls |
 
-echo why are we here; echo just to suffer?
+echo we here; echo j?
 
 echo snaaaaaaakeeeeeeeee
 
@@ -39,6 +39,8 @@ exewf
 touch g.txt
 
 cat g.txt
+
+acdcd
 
 EOF
 

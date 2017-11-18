@@ -83,6 +83,9 @@ int main()
         tokenizer tok{userCommand, sep}; //Parse, breaking up by spaces and semicolons 
         
         std::stack<std::string> parenStack; //stack to compute amount of parantheses
+        //std::cout << parenStack.size() << std::endl;
+        
+        
     try
     {
         //Iterates through the token to find parentheses and checks if there is an imbalance
@@ -100,7 +103,7 @@ int main()
                 if (parenStack.empty())
                 {
                     //imbalanced, throw error
-                    throw 'e';
+                    throw 'd';
                 }
                 else
                 {
@@ -232,6 +235,10 @@ int main()
                 {
                     //Goes through the stack of operators and converts and pops
                     // until open paren
+                    if(stack.empty())
+                    {
+                        std::cout << "empty stac" << std::endl;
+                    }
                     while(stack.top() != "(" )
                     {
                         if (stack.top() == "||")
@@ -313,6 +320,11 @@ int main()
             // CREATE AND EXECUTE TREE, CURRENTLY DEALLOCATES MEMORY RIGHT AFTER EXECUTING THE TREE
             createTree(objects, postFix); 
             
+            if (objects.empty()) //Prevents empty root from being made
+            {
+                throw 'e';
+            }
+            
             treePointer->root = objects.top();
             treePointer->root->execute(); //execute from root
             treePointer->destructor(treePointer->root); //deallocate memory
@@ -330,7 +342,7 @@ int main()
         {
             if(emptyError == 'e')
             {
-                std::cout << "Imbalanced Parantheses" << std::endl; 
+                std::cout << "Invalid Input: Imbalanced Parantheses or Empty Input" << std::endl; 
             }
         }
         
