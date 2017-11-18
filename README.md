@@ -10,7 +10,7 @@ Once our tree was built we called execute() on the root of the tree, which will 
 
 rshell can also use the test command to test file paths with the flags -e, -f, or -d, with -e being the default flag when no flag is specified.  Test can also be called using brackets.   
 
-It can also handle precedence with parenthesis
+It can also handle precedence with parenthesis. Commands with nested parentheses will also work
 
 
 ## How to Use
@@ -39,6 +39,8 @@ As of right now, ending a command with a connector is not valid. Connectors cann
 exit(0) command causes 5 possible blocks of memory leakage
 
 If you echo quotation marks, they are echoed as well
+
+Certain edgecases do not generate an error; program goes to next line
 
 
 ## Authors

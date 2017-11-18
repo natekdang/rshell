@@ -352,7 +352,7 @@ int main()
             treePointer->destructor(treePointer->root);
             delete treePointer;
             
-            exit(0); //****************************************************TESTING
+            exit(0)
         }
     }
     
